@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吳明軒 Wu Ming-Xuan | AI Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f3ee;
+    --accent: #c8401a;
+    --accent2: #1a4fc8;
+    --muted: #6b6760;
+    --line: #d8d4cc;
+    --card: #ffffff;
+    --teal: #0d7377;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: all 0.18s ease;
+    mix-blend-mode: multiply;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(245,243,238,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; text-decoration: none;
+    color: var(--muted); letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 0.25s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 3rem 4rem 3rem;
+    position: relative; z-index: 2;
+  }
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--accent);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-tag::before {
+    content: ''; display: inline-block;
+    width: 2rem; height: 1px; background: var(--accent);
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(3rem, 5vw, 5rem);
+    line-height: 1.0; letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+  .name-zh {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 700; font-size: clamp(1.4rem, 2.5vw, 2rem);
+    color: var(--muted); margin-bottom: 2rem;
+    letter-spacing: 0.2em;
+  }
+  .hero-desc {
+    font-size: 1rem; line-height: 1.8; color: var(--muted);
+    max-width: 480px; margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-desc strong { color: var(--ink); font-weight: 500; }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 0.85rem; letter-spacing: 0.05em;
+    background: var(--ink); color: var(--paper);
+    padding: 0.85rem 2rem; text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-outline {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border: 1.5px solid var(--ink); color: var(--ink);
+    padding: 0.85rem 2rem; text-decoration: none;
+    display: inline-block; transition: all 0.25s;
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+  .hero-right {
+    background: var(--ink);
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(200,64,26,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,64,26,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2rem; position: relative; z-index: 2;
+    margin-bottom: 3rem;
+  }
+  .stat-item { border-left: 2px solid var(--accent); padding-left: 1rem; }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 2.5rem; color: var(--paper);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; color: rgba(245,243,238,0.45);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+  .hero-quote {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem; color: rgba(245,243,238,0.5);
+    font-style: italic; line-height: 1.7;
+    position: relative; z-index: 2;
+    border-top: 1px solid rgba(245,243,238,0.1);
+    padding-top: 1.5rem;
+  }
+  .hero-accent-circle {
+    position: absolute; top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(200,64,26,0.2); border-radius: 50%;
+  }
+  .hero-accent-circle2 {
+    position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border: 1px solid rgba(200,64,26,0.1); border-radius: 50%;
+  }
+
+  /* Sections */
+  section { padding: 6rem 3rem; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--accent);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-label::before {
+    content: ''; width: 2rem; height: 1px; background: var(--accent);
+  }
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    letter-spacing: -0.02em; margin-bottom: 3rem;
+    line-height: 1.1;
+  }
+
+  /* About */
+  #about { background: var(--card); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: start;
+  }
+  .about-text p {
+    font-size: 1rem; line-height: 1.9; color: var(--muted);
+    margin-bottom: 1.2rem; font-weight: 300;
+  }
+  .about-text strong { color: var(--ink); font-weight: 500; }
+  .trait-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .trait-card {
+    border: 1px solid var(--line); padding: 1.2rem;
+    position: relative; overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .trait-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .trait-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 3px; height: 0;
+    background: var(--accent); transition: height 0.3s;
+  }
+  .trait-card:hover::before { height: 100%; }
+  .trait-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .trait-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; margin-bottom: 0.3rem;
+  }
+  .trait-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+  /* Skills */
+  #skills { background: var(--paper); }
+  .skills-layout {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  }
+  .skill-group {
+    background: var(--card);
+    padding: 1.8rem; border: 1px solid var(--line);
+    transition: all 0.25s;
+  }
+  .skill-group:hover { border-color: var(--accent2); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.07); }
+  .skill-group-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 0.05em;
+    margin-bottom: 1.2rem; color: var(--accent2);
+    text-transform: uppercase;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; padding: 0.3rem 0.7rem;
+    background: var(--paper); border: 1px solid var(--line);
+    color: var(--ink); letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .skill-tag:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* Research */
+  #research { background: var(--ink); color: var(--paper); }
+  #research h2 { color: var(--paper); }
+  #research .section-label { color: var(--accent); }
+  .papers-list { display: flex; flex-direction: column; gap: 1.5px; }
+  .paper-item {
+    background: rgba(245,243,238,0.04);
+    border: 1px solid rgba(245,243,238,0.08);
+    padding: 1.8rem 2rem;
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 2rem; align-items: center;
+    transition: all 0.25s; cursor: default;
+  }
+  .paper-item:hover {
+    background: rgba(200,64,26,0.08);
+    border-color: rgba(200,64,26,0.3);
+    transform: translateX(6px);
+  }
+  .paper-year {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.4rem; color: var(--accent);
+    line-height: 1; min-width: 60px;
+  }
+  .paper-info {}
+  .paper-title {
+    font-family: 'Noto Sans TC', sans-serif; font-weight: 500;
+    font-size: 0.95rem; margin-bottom: 0.4rem; line-height: 1.5;
+  }
+  .paper-venue {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    color: rgba(245,243,238,0.4); letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .paper-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    padding: 0.3rem 0.8rem; letter-spacing: 0.08em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .badge-ieee { border: 1px solid rgba(13,115,119,0.6); color: #0d7377; }
+  .badge-acm { border: 1px solid rgba(200,64,26,0.5); color: var(--accent); }
+
+  /* Awards */
+  #awards { background: var(--paper); }
+  .awards-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+  }
+  .award-card {
+    background: var(--card); border: 1px solid var(--line);
+    padding: 1.8rem; display: flex; gap: 1.2rem;
+    align-items: flex-start; transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .award-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); border-color: transparent; }
+  .award-card.gold { border-left: 3px solid #d4a017; }
+  .award-card.silver { border-left: 3px solid #9ca3af; }
+  .award-card.bronze { border-left: 3px solid #c87533; }
+  .award-emoji { font-size: 2rem; line-height: 1; }
+  .award-rank {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 0.3rem;
+  }
+  .award-card.gold .award-rank { color: #d4a017; }
+  .award-card.silver .award-rank { color: #9ca3af; }
+  .award-card.bronze .award-rank { color: #c87533; }
+  .award-name {
+    font-weight: 500; font-size: 0.9rem; line-height: 1.5;
+    margin-bottom: 0.3rem;
+  }
+  .award-year {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    color: var(--muted); letter-spacing: 0.08em;
+  }
+
+  /* Education */
+  #education { background: var(--card); }
+  .edu-timeline { position: relative; padding-left: 2rem; }
+  .edu-timeline::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 0;
+    width: 1px; background: var(--line);
+  }
+  .edu-item {
+    position: relative; padding-bottom: 3rem; padding-left: 1.5rem;
+  }
+  .edu-item::before {
+    content: ''; position: absolute; left: -2rem;
+    top: 6px; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .edu-period {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    color: var(--muted); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .edu-degree {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1.2rem; margin-bottom: 0.2rem;
+  }
+  .edu-school { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.8rem; }
+  .edu-highlight {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--paper); padding: 0.4rem 1rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.06em; color: var(--accent);
+    border: 1px solid var(--line); margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .edu-courses {
+    font-size: 0.82rem; color: var(--muted); line-height: 1.8;
+    margin-top: 0.8rem;
+  }
+  .edu-courses span {
+    display: inline-block; background: var(--paper);
+    padding: 0.2rem 0.6rem; font-size: 0.75rem;
+    border: 1px solid var(--line); margin: 0.2rem 0.2rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Contact */
+  #contact {
+    background: var(--ink); color: var(--paper);
+    text-align: center; padding: 6rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  #contact h2 { color: var(--paper); margin-bottom: 1rem; }
+  .contact-sub {
+    color: rgba(245,243,238,0.5); font-size: 1rem;
+    margin-bottom: 3rem; font-weight: 300;
+  }
+  .contact-grid {
+    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  .contact-item {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+    color: rgba(245,243,238,0.6); letter-spacing: 0.05em;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .contact-item:hover { color: var(--accent); }
+  .contact-icon { font-size: 1.4rem; }
+  .avail-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgba(13,115,119,0.5); color: #0d9e9e;
+    padding: 0.5rem 1.2rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .avail-dot {
+    width: 7px; height: 7px; background: #0d9e9e; border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .contact-bg-text {
+    position: absolute; bottom: -2rem; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(4rem, 12vw, 10rem);
+    color: rgba(245,243,238,0.03); white-space: nowrap;
+    pointer-events: none; letter-spacing: -0.03em;
+  }
+
+  /* Scroll animations */
+  .fade-in {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .fade-in-delay-1 { transition-delay: 0.1s; }
+  .fade-in-delay-2 { transition-delay: 0.2s; }
+  .fade-in-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 768px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .about-grid, .skills-layout, .awards-grid { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .paper-item { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#hero" class="nav-logo">WMX</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag">AI Engineer · Data Scientist</div>
+    <h1>Wu<br>Ming-<br>Xuan</h1>
+    <div class="name-zh">吳 明 軒</div>
+    <p class="hero-desc">
+      國立成功大學數據科學碩士，專注於<strong>電腦視覺</strong>與<strong>深度學習</strong>。
+      5 篇 IEEE / ACM 國際論文，多項競賽冠亞軍。
+      相信 AI 的力量來自於<strong>紮實的理論 × 實戰的勇氣</strong>。
+    </p>
+    <div class="hero-cta">
+      <a href="#research" class="btn-primary">View Research →</a>
+      <a href="#contact" class="btn-outline">Contact Me</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-accent-circle"></div>
+    <div class="hero-accent-circle2"></div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Int'l Papers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.22</div>
+        <div class="stat-label">Master GPA / 4.3</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">#1</div>
+        <div class="stat-label">Undergrad Rank</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2×</div>
+        <div class="stat-label">Competition Champion</div>
+      </div>
+    </div>
+    <div class="hero-quote">
+      「打不倒我的，都使我更強大。」<br>
+      <span style="font-size:0.75rem; opacity:0.4;">"What does not break me makes me stronger."</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About Me · 關於我</div>
+  <h2>Not just a researcher.<br>A builder who thinks.</h2>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <p>
+        我從高中電機科一路轉換跑道，在<strong>國立屏東科技大學資訊管理系</strong>以系第一名畢業，
+        再考入<strong>國立成功大學數據科學研究所</strong>。這段歷程讓我深信：
+        <strong>找到熱情，拚命努力，任何起點都能到達頂點。</strong>
+      </p>
+      <p>
+        研究所期間，我在統計系底下學習，建立了從神經元數學、統計機率到
+        頂層 AI 應用的完整知識體系。不只做研究，更在<strong>國際競賽</strong>中把知識化為勝利。
+      </p>
+      <p>
+        我是 <strong>INFJ</strong> 人格。在技術之外，我擔任研究所學會會長、排球隊隊長，
+        修畢教育學程——因為我相信，<strong>能讓整個團隊變強的人，比自己強的人更有價值。</strong>
+      </p>
+    </div>
+    <div class="trait-grid fade-in fade-in-delay-1">
+      <div class="trait-card">
+        <div class="trait-icon">🔬</div>
+        <div class="trait-title">理論紮實</div>
+        <div class="trait-desc">從線性代數、統計推論到深度學習，基礎扎得深才走得遠。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-icon">🏆</div>
+        <div class="trait-title">競賽實戰</div>
+        <div class="trait-desc">多項國際 AI 競賽冠亞軍，知識不只在論文，更在排行榜上。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-icon">🤝</div>
+        <div class="trait-title">溝通領導</div>
+        <div class="trait-desc">將複雜技術化繁為簡，帶動整個團隊的認知與執行力提升。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-icon">🚀</div>
+        <div class="trait-title">抗壓成長</div>
+        <div class="trait-desc">科大第一名考進成大，壓力是我最好的成長燃料。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Skills · 技能</div>
+  <h2>What I work with.</h2>
+  <div class="skills-layout">
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">AI / Deep Learning</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PyTorch</span>
+        <span class="skill-tag">Scikit-learn</span>
+        <span class="skill-tag">YOLOv7/v8</span>
+        <span class="skill-tag">Object Detection</span>
+        <span class="skill-tag">Knowledge Distillation</span>
+        <span class="skill-tag">Adversarial Defense</span>
+        <span class="skill-tag">Semi-supervised Learning</span>
+      </div>
+    </div>
+    <div class="skill-group fade-in fade-in-delay-1">
+      <div class="skill-group-title">Data Science</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">EDA</span>
+        <span class="skill-tag">Statistical Modeling</span>
+        <span class="skill-tag">Hypothesis Testing</span>
+        <span class="skill-tag">Reliability Analysis</span>
+        <span class="skill-tag">Time Series</span>
+        <span class="skill-tag">LSTM</span>
+      </div>
+    </div>
+    <div class="skill-group fade-in fade-in-delay-2">
+      <div class="skill-group-title">Engineering</div>
+      <div class="skill-tags">
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">ASP.NET</span>
+        <span class="skill-tag">MSSQL</span>
+        <span class="skill-tag">GitHub</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">System Integration</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-label">Research · 研究成果</div>
+  <h2>Published work.</h2>
+  <div class="papers-list">
+
+    <div class="paper-item fade-in">
+      <div class="paper-year">2024</div>
+      <div class="paper-info">
+        <div class="paper-title">LFGN: Low-Level Feature-Guided Network For Adversarial Defense</div>
+        <div class="paper-venue">IEEE ICIP 2024 · Abu Dhabi, UAE · 自駕車感知對抗式防禦</div>
+      </div>
+      <span class="paper-badge badge-ieee">IEEE</span>
+    </div>
+
+    <div class="paper-item fade-in fade-in-delay-1">
+      <div class="paper-year">2024</div>
+      <div class="paper-info">
+        <div class="paper-title">OmniDet: Omnidirectional Object Detection via Fisheye Camera Adaptation</div>
+        <div class="paper-venue">IEEE MIPR 2024 · California, USA · 魚眼相機全向物件偵測</div>
+      </div>
+      <span class="paper-badge badge-ieee">IEEE</span>
+    </div>
+
+    <div class="paper-item fade-in fade-in-delay-2">
+      <div class="paper-year">2023</div>
+      <div class="paper-info">
+        <div class="paper-title">Adapting Object Detection to Fisheye Cameras: A Knowledge Distillation with Semi-Pseudo-Label Approach</div>
+        <div class="paper-venue">ACM MMAsia 2023 · Tainan, Taiwan · 知識蒸餾 × 半偽標籤</div>
+      </div>
+      <span class="paper-badge badge-acm">ACM</span>
+    </div>
+
+    <div class="paper-item fade-in">
+      <div class="paper-year">2023</div>
+      <div class="paper-info">
+        <div class="paper-title">Predicting Car Accidents with YOLOv7 Object Detection and Object Relationships</div>
+        <div class="paper-venue">IEEE ICME 2023 · Queensland, Australia · 🏆 競賽冠軍論文</div>
+      </div>
+      <span class="paper-badge badge-ieee">IEEE</span>
+    </div>
+
+    <div class="paper-item fade-in fade-in-delay-1">
+      <div class="paper-year">2022</div>
+      <div class="paper-info">
+        <div class="paper-title">Using LSTM and Regression Analysis for Railway Passenger Traffic Volume Prediction</div>
+        <div class="paper-venue">IEEE GCCE 2022 · Osaka, Japan · 鐵路旅客流量預測</div>
+      </div>
+      <span class="paper-badge badge-ieee">IEEE</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="section-label">Awards · 競賽獎項</div>
+  <h2>Competing at the top.</h2>
+  <div class="awards-grid">
+
+    <div class="award-card gold fade-in">
+      <div class="award-emoji">🥇</div>
+      <div>
+        <div class="award-rank">1st Place · Champion</div>
+        <div class="award-name">2023 Anticipating Vehicle Accidents Challenge</div>
+        <div class="award-year">國際車禍預測競賽 · 全球冠軍</div>
+      </div>
+    </div>
+
+    <div class="award-card silver fade-in fade-in-delay-1">
+      <div class="award-emoji">🥈</div>
+      <div>
+        <div class="award-rank">2nd Place · Runner-up</div>
+        <div class="award-name">2023 PAIR-LITEON AI Competition</div>
+        <div class="award-year">PAIR 聯成光電 AI 競賽 · 亞軍</div>
+      </div>
+    </div>
+
+    <div class="award-card silver fade-in fade-in-delay-2">
+      <div class="award-emoji">🥈</div>
+      <div>
+        <div class="award-rank">2nd Place · Runner-up</div>
+        <div class="award-name">2022 智慧感測聯網創新應用競賽 · 智慧電子組</div>
+        <div class="award-year">Smart Sensing IoT Innovation Competition</div>
+      </div>
+    </div>
+
+    <div class="award-card bronze fade-in fade-in-delay-3">
+      <div class="award-emoji">🥉</div>
+      <div>
+        <div class="award-rank">3rd Place</div>
+        <div class="award-name">2022 大專院校資訊應用服務創新競賽</div>
+        <div class="award-year">University IT Innovation Service Competition</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">Education · 學歷</div>
+  <h2>The long game.</h2>
+  <div class="edu-timeline">
+
+    <div class="edu-item fade-in">
+      <div class="edu-period">Sep 2023 – Jun 2025</div>
+      <div class="edu-degree">M.S. in Data Science｜數據科學研究所</div>
+      <div class="edu-school">國立成功大學 National Cheng Kung University</div>
+      <span class="edu-highlight">GPA 4.22 / 4.3</span>
+      <span class="edu-highlight">EMI E2 Level</span>
+      <span class="edu-highlight">論文：BFDM 魚眼去噪模型</span>
+      <div class="edu-courses">
+        <span>Deep Learning</span>
+        <span>Machine Learning</span>
+        <span>Computer Vision</span>
+        <span>Statistical Methods</span>
+        <span>Reliability Analysis</span>
+        <span>IoT Security</span>
+        <span>Trustworthy Data Analysis</span>
+      </div>
+    </div>
+
+    <div class="edu-item fade-in fade-in-delay-1">
+      <div class="edu-period">Sep 2019 – Jun 2023</div>
+      <div class="edu-degree">B.S. in Information Management｜資訊管理學系</div>
+      <div class="edu-school">國立屏東科技大學 NPUST</div>
+      <span class="edu-highlight">成績 92.87</span>
+      <span class="edu-highlight">畢業排名 #1 / 54</span>
+      <span class="edu-highlight">修畢教育學程</span>
+      <div class="edu-courses">
+        <span>Management Psychology</span>
+        <span>Information Systems</span>
+        <span>Machine Learning (intro)</span>
+        <span>C# / ASP.NET</span>
+        <span>MSSQL</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label" style="justify-content:center;">Contact · 聯絡</div>
+  <h2>Let's build something.</h2>
+  <p class="contact-sub">Available immediately after Lunar New Year 2026 · 農曆春節後可立即到職</p>
+
+  <div class="contact-grid">
+    <a href="tel:+886918928733" class="contact-item">
+      <span class="contact-icon">📱</span>
+      +886 918-928-733
+    </a>
+    <a href="https://github.com/wu-ming-shyen" target="_blank" class="contact-item">
+      <span class="contact-icon">💻</span>
+      github.com/wu-ming-shyen
+    </a>
+    <div class="contact-item">
+      <span class="contact-icon">📍</span>
+      台南市，Taiwan
+    </div>
+  </div>
+
+  <div class="avail-badge">
+    <span class="avail-dot"></span>
+    Open to Work · 求職中
+  </div>
+
+  <div class="contact-bg-text">WMX</div>
+</section>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.15;
+    ry += (my - ry - 18) * 0.15;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      ring.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+    });
+  });
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
